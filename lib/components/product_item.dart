@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:loja_ii__flutter/models/product.dart';
+import 'package:loja_ii__flutter/pages/product_detail_page.dart';
+import 'package:loja_ii__flutter/utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key, required this.product}) : super(key: key);
@@ -13,9 +15,18 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
-        child: Image.network(
-          product.imageUrl,
-          fit: BoxFit.cover,
+        // ignore: sort_child_properties_last
+        child: GestureDetector(
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
+          ),
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              AppRoutes.PRODUCT_DETAIL,
+              arguments: product,
+            );
+          },
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black45,
