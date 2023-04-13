@@ -20,7 +20,10 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black45,
           leading: IconButton(
-            icon: Icon(Icons.favorite),
+            icon: Icon(
+              Icons.favorite,
+              color: Theme.of(context).accentColor,
+            ),
             onPressed: () {},
           ),
           title: Text(
@@ -28,7 +31,10 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Theme.of(context).accentColor,
+            ),
             onPressed: () {},
           ),
         ),
