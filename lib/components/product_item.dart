@@ -7,16 +7,14 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(
-      context,
-      // Indica que está monitorando as modificações
-      // FALSE == não deseja monitorar as modificações
-      // Não vai refletir na UI as modificações
-      // Utilizado em partes da UI que possuem dados imultaves(final)
-      //listen: true
-    );
+    final product = Provider.of<Product>(context,
+        // Indica que está monitorando as modificações
+        // FALSE == não deseja monitorar as modificações
+        // Não vai refletir na UI as modificações
+        // Utilizado em partes da UI que possuem dados imultaves(final)
+        // Tudo que está fora do consumer não vai ser notificado
+        listen: false);
 
-    // Corta de forma redondada o elemento
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -35,14 +33,24 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black45,
-          leading: IconButton(
-            icon: Icon(
-              product.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: Theme.of(context).accentColor,
+          // Monitora um ponto especifico que haverá modificação
+          leading: Consumer<Product>(
+            // o terceiro param '_' é um child
+            // Trecho da UI que nunca vai ser modificado
+            // child: Column(children: [
+            //   Text('Algo que nunca muda #1'),
+            //   Text('Algo que nunca muda #2'),
+            //   Text('Algo que nunca muda #3'),
+            // ]),
+            builder: (ctx, product, _) => IconButton(
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: Theme.of(context).accentColor,
+              ),
+              onPressed: () {
+                product.toggleFavorite();
+              },
             ),
-            onPressed: () {
-              product.toggleFavorite();
-            },
           ),
           title: Text(
             product.title,
