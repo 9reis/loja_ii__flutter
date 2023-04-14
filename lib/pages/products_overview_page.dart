@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:loja_ii__flutter/components/product_item.dart';
 import 'package:loja_ii__flutter/data/dummy_data.dart';
 import 'package:loja_ii__flutter/models/product.dart';
+import 'package:loja_ii__flutter/models/product_list.dart';
+import 'package:provider/provider.dart';
 
 class ProductsOverviewPages extends StatelessWidget {
   ProductsOverviewPages();
 
-  final List<Product> loadedProducts = dummyProducts;
-
   @override
   Widget build(BuildContext context) {
+    // <ProductList> é o tipo de provider que deseja obter
+    final provider = Provider.of<ProductList>(context);
+    final List<Product> loadedProducts = provider.items;
+     
     return Scaffold(
       appBar: AppBar(
         title: Text('Minha Loja'),
