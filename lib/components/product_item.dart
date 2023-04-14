@@ -7,7 +7,14 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(
+      context,
+      // Indica que está monitorando as modificações
+      // FALSE == não deseja monitorar as modificações
+      // Não vai refletir na UI as modificações
+      // Utilizado em partes da UI que possuem dados imultaves(final)
+      //listen: true
+    );
 
     // Corta de forma redondada o elemento
     return ClipRRect(
