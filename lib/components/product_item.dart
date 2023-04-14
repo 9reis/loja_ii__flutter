@@ -7,13 +7,7 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context,
-        // Indica que está monitorando as modificações
-        // FALSE == não deseja monitorar as modificações
-        // Não vai refletir na UI as modificações
-        // Utilizado em partes da UI que possuem dados imultaves(final)
-        // Tudo que está fora do consumer não vai ser notificado
-        listen: false);
+    final product = Provider.of<Product>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
