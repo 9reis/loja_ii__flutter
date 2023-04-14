@@ -13,7 +13,12 @@ class ProductGrid extends StatelessWidget {
     return GridView.builder(
       padding: EdgeInsets.all(10),
       itemCount: loadedProducts.length,
-      itemBuilder: (ctx, i) => ProductItem(product: loadedProducts[i]),
+      itemBuilder: (ctx, i) => ChangeNotifierProvider(
+        create: (_) => loadedProducts[i], //[1]
+        // Não é necessario passar o produto pelo construtor
+        // Vai estar recebendo a partir do provider [1]
+        child: ProductItem(),
+      ),
       // Area dentro de algo que é scrollble/rolavel
       // Com a qtd de itens fixos no eixo cruzado
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
