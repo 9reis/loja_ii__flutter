@@ -18,7 +18,7 @@ class CartPage extends StatelessWidget {
       body: Column(
         children: [
           Card(
-            margin: EdgeInsets.all(25),
+            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
@@ -36,6 +36,7 @@ class CartPage extends StatelessWidget {
                     label: Text(
                       'R\$${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
+                        fontWeight: FontWeight.w700,
                         color: Theme.of(context)
                             .primaryTextTheme
                             .headlineMedium
