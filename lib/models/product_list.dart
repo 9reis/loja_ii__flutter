@@ -15,6 +15,10 @@ class ProductList with ChangeNotifier {
     // Notifica os interessados para que haja uma mudança na UI
     notifyListeners();
   }
+
+  int get itemsCount {
+    return _items.length;
+  }
 }
 
 // bool _showFavoriteOnly = false;

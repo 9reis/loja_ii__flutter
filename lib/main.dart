@@ -7,6 +7,7 @@ import 'package:loja_ii__flutter/pages/counter_page.dart';
 import 'package:loja_ii__flutter/pages/orders_page.dart';
 import 'package:loja_ii__flutter/pages/product_detail_page.dart';
 import 'package:loja_ii__flutter/pages/products_overview_page.dart';
+import 'package:loja_ii__flutter/pages/products_page.dart';
 import 'package:loja_ii__flutter/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
           AppRoutes.CART: (ctx) => CartPage(),
           AppRoutes.ORDERS: (ctx) => OrdersPage(),
+          AppRoutes.PRODUCTS: (ctx) => ProductsPage(),
         },
       ),
     );
