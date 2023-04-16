@@ -13,6 +13,8 @@ class AppDrawer extends StatelessWidget {
         children: [
           AppBar(
             title: Text('Bem Vindo Usuário'),
+            // Remove o icone de menu que fica dentro do Drawer
+            automaticallyImplyLeading: false,
           ),
           Divider(),
           ListTile(
