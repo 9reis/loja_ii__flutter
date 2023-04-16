@@ -51,7 +51,8 @@ class ProductGridItem extends StatelessWidget {
               color: Theme.of(context).accentColor,
             ),
             onPressed: () {
-              // Pega o Scaffold mais px dessa tela
+              // Esconde a SnackBar atual antes de mostrar a proxima
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
