@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loja_ii__flutter/components/product_item.dart';
+import 'package:loja_ii__flutter/components/product_grid_item.dart';
 import 'package:loja_ii__flutter/models/product.dart';
 import 'package:loja_ii__flutter/models/product_list.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class ProductGrid extends StatelessWidget {
         value: loadedProducts[i], //[1]
         // Não é necessario passar o produto pelo construtor
         // Vai estar recebendo a partir do provider [1]
-        child: ProductItem(),
+        child: ProductGridItem(),
       ),
       // Area dentro de algo que é scrollble/rolavel
       // Com a qtd de itens fixos no eixo cruzado
