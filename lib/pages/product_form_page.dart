@@ -30,6 +30,29 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+
+      // Se o arg não for null
+      // é a tela de edição
+      if (arg != null) {
+        final product = arg as Product;
+
+        _formData['id'] = product.id;
+        _formData['name'] = product.name;
+        _formData['price'] = product.price;
+        _formData['description'] = product.description;
+        _formData['imageUrl'] = product.imageUrl;
+
+        _imageUrlController.text = product.imageUrl;
+      }
+    }
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _priceFocus.dispose();
@@ -64,7 +87,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     Provider.of<ProductList>(
       context,
       listen: false,
-    ).addProductFromData(_formData);
+    ).saveProduct(_formData);
     // Vai para tela anterior após salvar o item
     Navigator.of(context).pop();
   }
@@ -88,9 +111,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Nome',
-                ),
+                // Carrega a tela de edição com o valor salvo
+                initialValue: _formData['name']?.toString(),
+                decoration: InputDecoration(labelText: 'Nome'),
                 // Vai para o px input
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -112,6 +135,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['price']?.toString(),
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocus,
@@ -132,6 +156,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['description']?.toString(),
                 decoration: InputDecoration(labelText: 'Descrição'),
                 // Vai para o px input
                 focusNode: _descriptionFocus,
