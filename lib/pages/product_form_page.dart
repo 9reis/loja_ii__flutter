@@ -44,6 +44,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void _submitForm() {
+    final _isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!_isValid) {
+      return;
+    }
+
     _formKey.currentState?.save();
     final newProduct = Product(
       id: Random().nextDouble().toString(),
@@ -76,13 +82,32 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Nome'),
+                decoration: InputDecoration(
+                  labelText: 'Nome',
+                ),
                 // Vai para o px input
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
                 onSaved: (name) => _formData['name'] = name ?? '',
+                validator: (_name) {
+                  // Garante que a String está sempre presente
+                  final name = _name ?? '';
+
+                  if (name.trim().isEmpty) {
+                    return 'O nome é obrigatório';
+                  }
+
+                  if (name.trim().length < 3) {
+                    return 'O nome precisa no minimo de 3 letras';
+                  }
+
+                  // Se retorna:
+                  // Null => validou com sucesso
+                  // String => será exibida como msg de erro
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
