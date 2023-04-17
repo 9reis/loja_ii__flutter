@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:loja_ii__flutter/models/product.dart';
+import 'package:loja_ii__flutter/models/product_list.dart';
+import 'package:provider/provider.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
@@ -60,16 +60,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
 
     _formKey.currentState?.save();
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      name: _formData['name'] as String,
-      description: _formData['description'] as String,
-      price: _formData['price'] as double,
-      imageUrl: _formData['imageUrl'] as String,
-    );
-    print(newProduct.id);
-    print(newProduct.name);
-    print(newProduct.description);
+    // Fora do build, é necessario que o provider tenha o listen: false
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).addProductFromData(_formData);
+    // Vai para tela anterior após salvar o item
+    Navigator.of(context).pop();
   }
 
   @override
