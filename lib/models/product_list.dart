@@ -107,13 +107,25 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  void removeProduct(Product product) {
+  Future<void> removeProduct(Product product) async {
     // Pega o indice para saber se o produto pertence a lista
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == product.id);
+      // Exclui localmente
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      // Manda para o servidor
+      // O servidor manda uma resposta, mesmo que tenha dado erro
+      final res = await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
+
+      // Se deu erro, restaura os itens e notifica os listeners
+      if (res.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+      }
     }
   }
 
