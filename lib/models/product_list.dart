@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:loja_ii__flutter/models/product.dart';
 
 class ProductList with ChangeNotifier {
-  final _url = 'https://shop-9reis-default-rtdb.firebaseio.com/products.json';
+  final _baseUrl = 'https://shop-9reis-default-rtdb.firebaseio.com/products';
 
   List<Product> _items = [];
   bool _showFavoriteOnly = false;
@@ -19,7 +19,9 @@ class ProductList with ChangeNotifier {
     // limpa a lista , para não duplicar os itens
     _items.clear();
 
-    final res = await http.get(Uri.parse(_url));
+    final res = await http.get(
+      Uri.parse('$_baseUrl.json'),
+    );
     // Só é possivel pegar a resposta pois está em um met async
 
     Map<String, dynamic> data = jsonDecode(res.body);
@@ -60,7 +62,7 @@ class ProductList with ChangeNotifier {
     // Recebe a URI
     final res = await http.post(
       // Recebe a coleção que deseja armazenar os dados
-      Uri.parse(_url),
+      Uri.parse('$_baseUrl.json'),
       body: jsonEncode(
         {
           'name': product.name,
@@ -85,14 +87,24 @@ class ProductList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
+      await http.patch(
+        Uri.parse('$_baseUrl/${product.id}.json'),
+        body: jsonEncode(
+          {
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'imageUrl': product.imageUrl,
+          },
+        ),
+      );
       _items[index] = product;
       notifyListeners();
     }
-    return Future.value();
   }
 
   void removeProduct(Product product) {
