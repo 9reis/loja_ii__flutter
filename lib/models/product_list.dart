@@ -33,9 +33,9 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     // Recebe a URI
-    final future = http.post(
+    final res = await http.post(
       // Recebe a coleção que deseja armazenar os dados
       Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
@@ -48,20 +48,18 @@ class ProductList with ChangeNotifier {
         },
       ),
     );
-    return future.then<void>((res) {
-      final id = jsonDecode(res.body)['name'];
-      _items.add(
-        Product(
-          id: id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          isFavorite: product.isFavorite,
-        ),
-      );
-      notifyListeners();
-    });
+    final id = jsonDecode(res.body)['name'];
+    _items.add(
+      Product(
+        id: id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        isFavorite: product.isFavorite,
+      ),
+    );
+    notifyListeners();
   }
 
   Future<void> updateProduct(Product product) {

@@ -77,7 +77,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return isValidUrl && endWithFile;
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     final _isValid = _formKey.currentState?.validate() ?? false;
 
     if (!_isValid) {
@@ -88,12 +88,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     setState(() => _isLoading = true);
 
-    // Fora do build, é necessario que o provider tenha o listen: false
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData).catchError((error) {
-      return showDialog(
+    try {
+      await Provider.of<ProductList>(
+        context,
+        listen: false,
+      ).saveProduct(_formData);
+      Navigator.of(context).pop();
+    } catch (error) {
+      await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Ocorreu um erro'),
@@ -106,13 +108,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
           ],
         ),
       );
-    }).then(
-      (value) {
-        setState(() => _isLoading = false);
-        Navigator.of(context).pop();
-      },
-    );
-    // Vai para tela anterior após salvar o item
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
