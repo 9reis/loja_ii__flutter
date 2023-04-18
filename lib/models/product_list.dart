@@ -3,13 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:loja_ii__flutter/data/dummy_data.dart';
 import 'package:loja_ii__flutter/models/product.dart';
 
 class ProductList with ChangeNotifier {
   final _url = 'https://shop-9reis-default-rtdb.firebaseio.com/products.json';
 
-  List<Product> _items = dummyProducts;
+  List<Product> _items = [];
   bool _showFavoriteOnly = false;
 
   List<Product> get items => [..._items];
@@ -19,7 +18,22 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     final res = await http.get(Uri.parse(_url));
     // Só é possivel pegar a resposta pois está em um met async
-    print(jsonDecode(res.body));
+
+    Map<String, dynamic> data = jsonDecode(res.body);
+
+    data.forEach((productId, productData) {
+      _items.add(
+        Product(
+          id: productId,
+          name: productData['name'],
+          description: productData['description'],
+          price: productData['price'],
+          imageUrl: productData['imageUrl'],
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+    });
+    notifyListeners();
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
