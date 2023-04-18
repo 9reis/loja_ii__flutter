@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:loja_ii__flutter/data/dummy_data.dart';
 import 'package:loja_ii__flutter/models/product.dart';
 
 class ProductList with ChangeNotifier {
+  final _baseUrl = 'https://shop-9reis-default-rtdb.firebaseio.com';
+
   List<Product> _items = dummyProducts;
   bool _showFavoriteOnly = false;
 
@@ -30,6 +34,21 @@ class ProductList with ChangeNotifier {
   }
 
   void addProduct(Product product) {
+    // Recebe a URI
+    http.post(
+      // Recebe a coleção que deseja armazenar os dados
+      Uri.parse('$_baseUrl/products.json'),
+      body: jsonEncode(
+        {
+          'name': product.name,
+          'description': product.description,
+          'price': product.price,
+          'imageUrl': product.imageUrl,
+          'isFavorite': product.isFavorite,
+        },
+      ),
+    );
+
     _items.add(product);
 
     notifyListeners();
