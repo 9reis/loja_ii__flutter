@@ -16,6 +16,9 @@ class ProductList with ChangeNotifier {
       _items.where((prod) => prod.isFavorite).toList();
 
   Future<void> loadProducts() async {
+    // limpa a lista , para não duplicar os itens
+    _items.clear();
+
     final res = await http.get(Uri.parse(_url));
     // Só é possivel pegar a resposta pois está em um met async
 
