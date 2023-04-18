@@ -35,7 +35,7 @@ class ProductList with ChangeNotifier {
 
   void addProduct(Product product) {
     // Recebe a URI
-    http.post(
+    final future = http.post(
       // Recebe a coleção que deseja armazenar os dados
       Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
@@ -47,11 +47,27 @@ class ProductList with ChangeNotifier {
           'isFavorite': product.isFavorite,
         },
       ),
+      // Espera a resposta da requisição
+      // para poder executar o bloco de cod
     );
-
-    _items.add(product);
-
-    notifyListeners();
+    future.then((res) {
+      // Pega o corpo do obj salvo no banco
+      // Retorna a chave 'name' e o id do obj como valor
+      // print(jsonDecode(res.body));
+      // PEGA o obj pelo id
+      final id = jsonDecode(res.body)['name'];
+      _items.add(
+        Product(
+          id: id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.imageUrl,
+          isFavorite: product.isFavorite,
+        ),
+      );
+      notifyListeners();
+    });
   }
 
   void updateProduct(Product product) {

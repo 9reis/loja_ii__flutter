@@ -216,14 +216,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     ),
                     child: _imageUrlController.text.isEmpty
                         ? Text('Informa a URL')
-                        : Container(
-                            width: 100,
-                            height: 100,
-                            child: FittedBox(
-                              child: Image.network(_imageUrlController.text),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                        : Image.network(_imageUrlController.text),
                   ),
                 ],
               ),
