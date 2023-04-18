@@ -3,6 +3,7 @@ import 'package:loja_ii__flutter/components/app_drawer.dart';
 import 'package:loja_ii__flutter/components/badge.dart';
 import 'package:loja_ii__flutter/components/product_grid.dart';
 import 'package:loja_ii__flutter/models/cart.dart';
+import 'package:loja_ii__flutter/models/product_list.dart';
 import 'package:loja_ii__flutter/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,15 @@ class ProductsOverviewPages extends StatefulWidget {
 
 class _ProductsOverviewPagesState extends State<ProductsOverviewPages> {
   bool _showFavoriteOnly = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts();
+  }
 
   @override
   Widget build(BuildContext context) {

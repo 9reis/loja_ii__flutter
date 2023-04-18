@@ -7,7 +7,7 @@ import 'package:loja_ii__flutter/data/dummy_data.dart';
 import 'package:loja_ii__flutter/models/product.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://shop-9reis-default-rtdb.firebaseio.com';
+  final _url = 'https://shop-9reis-default-rtdb.firebaseio.com/products.json';
 
   List<Product> _items = dummyProducts;
   bool _showFavoriteOnly = false;
@@ -15,6 +15,12 @@ class ProductList with ChangeNotifier {
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
+
+  Future<void> loadProducts() async {
+    final res = await http.get(Uri.parse(_url));
+    // Só é possivel pegar a resposta pois está em um met async
+    print(jsonDecode(res.body));
+  }
 
   Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
@@ -37,7 +43,7 @@ class ProductList with ChangeNotifier {
     // Recebe a URI
     final res = await http.post(
       // Recebe a coleção que deseja armazenar os dados
-      Uri.parse('$_baseUrl/products.json'),
+      Uri.parse(_url),
       body: jsonEncode(
         {
           'name': product.name,
