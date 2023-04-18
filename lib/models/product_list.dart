@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loja_ii__flutter/exceptions/http_exception.dart';
 import 'package:loja_ii__flutter/models/product.dart';
+import 'package:loja_ii__flutter/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://shop-9reis-default-rtdb.firebaseio.com/products';
-
   List<Product> _items = [];
   bool _showFavoriteOnly = false;
 
@@ -21,7 +20,7 @@ class ProductList with ChangeNotifier {
     _items.clear();
 
     final res = await http.get(
-      Uri.parse('$_baseUrl.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
     );
     // Só é possivel pegar a resposta pois está em um met async
 
@@ -63,7 +62,7 @@ class ProductList with ChangeNotifier {
     // Recebe a URI
     final res = await http.post(
       // Recebe a coleção que deseja armazenar os dados
-      Uri.parse('$_baseUrl.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
       body: jsonEncode(
         {
           'name': product.name,
@@ -93,7 +92,7 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('$_baseUrl/${product.id}.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
         body: jsonEncode(
           {
             'name': product.name,
@@ -120,7 +119,8 @@ class ProductList with ChangeNotifier {
 
       // Manda para o servidor
       // O servidor manda uma resposta, mesmo que tenha dado erro
-      final res = await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
+      final res = await http.delete(
+          Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'));
 
       // Se deu erro, restaura os itens e notifica os listeners
       if (res.statusCode >= 400) {
