@@ -92,7 +92,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
     Provider.of<ProductList>(
       context,
       listen: false,
-    ).saveProduct(_formData).then(
+    ).saveProduct(_formData).catchError((error) {
+      return showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Ocorreu um erro'),
+          content: Text('Erro ao salvar o produto'),
+          actions: [
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }).then(
       (value) {
         setState(() => _isLoading = false);
         Navigator.of(context).pop();
@@ -115,10 +129,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
       ),
       body: _isLoading
           ? Center(
-            child: CircularProgressIndicator(
-              
-            ),
-          )
+              child: CircularProgressIndicator(),
+            )
           : Padding(
               padding: const EdgeInsets.all(15),
               child: Form(

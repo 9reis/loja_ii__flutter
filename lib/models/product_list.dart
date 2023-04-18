@@ -47,14 +47,8 @@ class ProductList with ChangeNotifier {
           'isFavorite': product.isFavorite,
         },
       ),
-      // Espera a resposta da requisição
-      // para poder executar o bloco de cod
     );
     return future.then<void>((res) {
-      // Pega o corpo do obj salvo no banco
-      // Retorna a chave 'name' e o id do obj como valor
-      // print(jsonDecode(res.body));
-      // PEGA o obj pelo id
       final id = jsonDecode(res.body)['name'];
       _items.add(
         Product(
