@@ -16,7 +16,7 @@ class ProductList with ChangeNotifier {
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
-  void saveProduct(Map<String, Object> data) {
+  Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
 
     final product = Product(
@@ -27,13 +27,13 @@ class ProductList with ChangeNotifier {
       imageUrl: data['imageUrl'] as String,
     );
     if (hasId) {
-      updateProduct(product);
+      return updateProduct(product);
     } else {
-      addProduct(product);
+      return addProduct(product);
     }
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     // Recebe a URI
     final future = http.post(
       // Recebe a coleção que deseja armazenar os dados
@@ -50,7 +50,7 @@ class ProductList with ChangeNotifier {
       // Espera a resposta da requisição
       // para poder executar o bloco de cod
     );
-    future.then((res) {
+    return future.then<void>((res) {
       // Pega o corpo do obj salvo no banco
       // Retorna a chave 'name' e o id do obj como valor
       // print(jsonDecode(res.body));
@@ -70,13 +70,14 @@ class ProductList with ChangeNotifier {
     });
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       _items[index] = product;
       notifyListeners();
     }
+    return Future.value();
   }
 
   void removeProduct(Product product) {
