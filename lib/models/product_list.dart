@@ -8,6 +8,10 @@ import 'package:loja_ii__flutter/models/product.dart';
 import 'package:loja_ii__flutter/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
+  ProductList(this._token, this._items);
+
+  String _token;
+
   List<Product> _items = [];
   bool _showFavoriteOnly = false;
 
@@ -20,7 +24,8 @@ class ProductList with ChangeNotifier {
     _items.clear();
 
     final res = await http.get(
-      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
+      // Informando para o FB que o user está logado
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=$_token'),
     );
     // Só é possivel pegar a resposta pois está em um met async
 
