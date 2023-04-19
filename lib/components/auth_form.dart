@@ -11,6 +11,9 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {'email': '', 'password': ''};
 
@@ -24,10 +27,11 @@ class _AuthFormState extends State<AuthForm> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
-        height: 320,
+        height: _isLogin() ? 310 : 400,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
@@ -48,7 +52,7 @@ class _AuthFormState extends State<AuthForm> {
                 obscureText: true,
                 onSaved: (password) => _authData['password'] = password ?? '',
                 controller: _passwordController,
-                validator: _authMode == AuthMode.Login
+                validator: _isLogin()
                     ? null
                     : (_password) {
                         final password = _password ?? '';
@@ -58,7 +62,7 @@ class _AuthFormState extends State<AuthForm> {
                         return null;
                       },
               ),
-              if (_authMode == AuthMode.Signup)
+              if (_isSignup())
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Confirmar Senha'),
                   keyboardType: TextInputType.text,
@@ -72,17 +76,27 @@ class _AuthFormState extends State<AuthForm> {
                   },
                 ),
               SizedBox(height: 20),
-              ElevatedButton(
-                child: Text(
-                  _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
-                ),
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  child: Text(
+                    _isLogin() ? 'ENTRAR' : 'REGISTRAR',
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                  onPressed: _submit,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                  ),
                 ),
+              Spacer(),
+              TextButton(
+                child: Text(
+                  _isLogin() ? 'DESEJA REGISTRAR?' : 'JÁ POSSUI CONTA?',
+                ),
+                onPressed: _switchAuthMode,
               ),
             ],
           ),
@@ -91,5 +105,35 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  void _submit() {}
+  void _submit() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    _formKey.currentState?.save();
+
+    if (_isLogin()) {
+      //Login
+    } else {
+      //Registrar
+    }
+
+    setState(() => _isLoading = false);
+  }
+
+  bool _isLogin() => _authMode == AuthMode.Login;
+  bool _isSignup() => _authMode == AuthMode.Signup;
+
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authMode = AuthMode.Signup;
+      } else {
+        _authMode = AuthMode.Login;
+      }
+    });
+  }
 }
