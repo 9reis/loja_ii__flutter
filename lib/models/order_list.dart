@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loja_ii__flutter/models/cart.dart';
+import 'package:loja_ii__flutter/models/cart_item.dart';
 import 'package:loja_ii__flutter/models/order.dart';
 import 'package:loja_ii__flutter/utils/constants.dart';
 
@@ -19,6 +20,38 @@ class OrderList with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+  }
+
+  Future<void> loadOrders() async {
+    // limpa a lista , para não duplicar os itens
+    _items.clear();
+
+    final res = await http.get(
+      Uri.parse('${Constants.ORDER_BASE_URL}.json'),
+    );
+    // Só é possivel pegar a resposta pois está em um met async
+
+    Map<String, dynamic> data = jsonDecode(res.body);
+
+    data.forEach((orderId, orderData) {
+      _items.add(
+        Order(
+          id: orderId,
+          date: DateTime.parse(orderData['date']),
+          total: orderData['total'],
+          products: (orderData['products'] as List<dynamic>).map((item) {
+            return CartItem(
+              id: item['id'],
+              productId: item['productId'],
+              name: item['name'],
+              quantity: item['quantity'],
+              price: item['price'],
+            );
+          }).toList(),
+        ),
+      );
+    });
+    notifyListeners();
   }
 
   Future<void> addOrder(Cart cart) async {
