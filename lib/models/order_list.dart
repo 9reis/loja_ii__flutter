@@ -14,10 +14,12 @@ import 'package:loja_ii__flutter/utils/constants.dart';
 class OrderList with ChangeNotifier {
   OrderList([
     this._token = '',
+    this._userId = '',
     this._items = const [],
   ]);
 
   final String _token;
+  final String _userId;
 
   List<Order> _items = [];
 
@@ -33,7 +35,7 @@ class OrderList with ChangeNotifier {
     List<Order> items = [];
 
     final res = await http.get(
-      Uri.parse('${Constants.ORDER_BASE_URL}.json?auth=$_token'),
+      Uri.parse('${Constants.ORDER_BASE_URL}/$_userId.json?auth=$_token'),
     );
     // Só é possivel pegar a resposta pois está em um met async
 
@@ -67,7 +69,7 @@ class OrderList with ChangeNotifier {
 
     final res = await http.post(
       // Recebe a coleção que deseja armazenar os dados
-      Uri.parse('${Constants.ORDER_BASE_URL}.json?auth=$_token'),
+      Uri.parse('${Constants.ORDER_BASE_URL}/$_userId.json?auth=$_token'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,
