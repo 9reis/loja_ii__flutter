@@ -35,19 +35,20 @@ class MyApp extends StatelessWidget {
         // O provider no qual depende,
         // deve estar em 1º na lista de providers
         ChangeNotifierProxyProvider<Auth, ProductList>(
-          create: (_) => ProductList('', []),
+          create: (_) => ProductList(),
           // Para não perder os itens carregados caso o token modifique
           // Para que o acesso do usuario demore mais tempo
           // vesao anterior do ProviderList
           update: (ctx, auth, previous) {
             return ProductList(
               auth.token ?? '',
+              auth.userId ?? '',
               previous?.items ?? [],
             );
           },
         ),
         ChangeNotifierProxyProvider<Auth, OrderList>(
-          create: (_) => OrderList('', []),
+          create: (_) => OrderList(),
           update: (ctx, auth, previous) {
             return OrderList(
               auth.token ?? '',

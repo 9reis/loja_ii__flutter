@@ -12,7 +12,10 @@ import 'package:loja_ii__flutter/models/order.dart';
 import 'package:loja_ii__flutter/utils/constants.dart';
 
 class OrderList with ChangeNotifier {
-  OrderList(this._token, this._items);
+  OrderList([
+    this._token = '',
+    this._items = const [],
+  ]);
 
   final String _token;
 
@@ -55,7 +58,7 @@ class OrderList with ChangeNotifier {
       );
     });
     _items = items.reversed.toList();
-    
+
     notifyListeners();
   }
 
